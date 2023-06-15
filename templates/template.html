@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html>
+    
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <title>{% block title %}{% endblock %}</title>
+
+        <link href="/static/favicon.webp" rel="icon">
+        <link href="{{ url_for('static', filename='css/reset.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/markdown.css') }}" rel="stylesheet">
+        
+        <link rel="prefetch" href="/static/js/jxl/jxl_dec.js" fetchpriority="high">
+        <link rel="prefetch" href="/static/js/jxl/jxl_dec.wasm" fetchpriority="high">
+        <script src="/static/js/jxl/jxl.min.js"></script>
+    </head>
+
+    <body>
+            {% block content %}{% endblock %}
+    </body>
+
+</html>

@@ -1,0 +1,17 @@
+{% extends "template.html" %}
+
+{% block title %}
+Gianni's Site
+{% endblock %}
+
+{% block content %}
+<div class="center"> 
+    <div class="page-title">Gianni's Site</div>
+</div>
+<div class="center-on-screen">
+    <a class="blog-button" href="{{ url_for('blog') }}">Blog</a>
+</div>
+<div class="center-on-screen">
+    <a class="email-button" href="mailto:grosatowork@proton.me">Email</a>
+</div>
+{% endblock %}
