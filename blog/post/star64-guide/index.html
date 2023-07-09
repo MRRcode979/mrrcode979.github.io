@@ -31,11 +31,11 @@ Star64: Installing Linux
 <p>If you are interested and want to try this yourself, you will need some accessories because the board is sold alone. (accessories can be found on the <a class="colored" href="https://pine64.com/product-category/star64-accessories/">Pine64 store</a> or somewhere else):
 <ul>
     <li>microSD card</li>
-    <li>USB to TTL Serial Adapter for serial communication (USB to Transistor-Transistor Logic cable)</li>
+    <li>3.3 volts USB to TTL Serial Adapter for serial communication (USB to Transistor-Transistor Logic cable)</li>
     <li>Power supply (12 volts 3 amp)</li>
     <li>Another computer to flash the microSD and use for the serial console</li>
 </ul>
-  We are using a TTL cable because the Star64 has an HDMI port that is not activated by the firmware so you cannot use it as a console. The specific USB to TTL cable I am using can be found <a class="colored" href="https://www.adafruit.com/product/954">here</a> but you can choose whatever TTL cable you want. Once you have everything necessary, get an image for your microSD card (I used <a class="colored" href="https://github.com/Fishwaldo/meta-pine64">Fishwaldo's images</a> so your results may vary using other images). Next, flash the image onto the microSD with <a class="colored" href="https://etcher.balena.io/">Balena Etcher.</a> Insert the microSD into the slot on the other back side of the board. Now you are going to set the dip switches located near the 40-pin GPIO bus on the side of the board to this configuration:</p>
+  The specific USB to TTL cable I am using can be found <a class="colored" href="https://www.adafruit.com/product/954">here</a> but you can choose whatever TTL cable you want. Once you have everything necessary, get an image for your microSD card (I used <a class="colored" href="https://github.com/Fishwaldo/meta-pine64">Fishwaldo's images</a> so your results may vary using other images). Next, flash the image onto the microSD with <a class="colored" href="https://etcher.balena.io/">Balena Etcher.</a> Insert the microSD into the slot on the other back side of the board. Now you are going to set the dip switches located near the 40-pin GPIO bus on the side of the board to this configuration:</p>
 <picture>
   <source srcset="/static/images/SD_switch_map.jxl" type="image/jxl">
   <source srcset="/static/images/SD_switch_map.webp" type="image/webp">
@@ -46,7 +46,7 @@ Star64: Installing Linux
   <source srcset="/static/images/pins.jxl" type="image/jxl">
   <img src="/static/images/pins.jpg" alt="Fallback image" loading="lazy">
 </picture>
-<div class="admonition danger"><p class="admonition-title">WARNING:</p> <b>Avoid the pins below pin 6; those are <u>5 volt</u> which is enough to mess up most cables. A very important thing to note is the schematics tell you to put TXD on pin 8 and RXD on pin 10 but <i>the schematics are wrong.</i></b>
+<div class="admonition danger"><p class="admonition-title">WARNING:</p> <b>Avoid the pins below pin 6; those are <u>5 volt</u> which is enough to mess up most serial cables. A very important thing to note is the schematics tell you to put TXD on pin 8 and RXD on pin 10 but <i>the schematics are wrong.</i></b>
 </div>
 Keeping that in mind, place <i>ground on pin 6, RXD on pin 8, and TXD on pin 10.</i> Connect the USB to TTL cable to a USB port on your computer. Open up the terminal and install tio or screen. After that, enter the following command: <code>tio -b 115200 /dev/ttyUSB0</code> or if your using screen enter this instead: <code>screen /dev/ttyUSB0 115200</code> If you're on a mac, tty path will be something more like <code>/dev/tty.usbserial-*</code> (* being the identifier of the USB to TTL cable). If you're unsure which path to use then run <code>ls -ltr /dev</code> and make sure it's showing up. Next, plug in the power supply to your board and wait, it might take a while. Linux will eventually start running. If you're using Fishwaldo's images, <a class="colored" href="https://github.com/Fishwaldo/meta-pine64">the logins and passwords are written in the README.</a> Now you can run commands and have some fun! Congratulations on installing Linux on your Star64 sbc!</p>
 <h2>Where to go from here?</h2>
