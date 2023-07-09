@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>
+Star64: Installing Linux
+</title>
+        <link href="/static/favicon.webp" rel="icon">
+        <link href="/static/css/reset.css" rel="stylesheet">
+        <link href="/static/css/main.css" rel="stylesheet">
+        <link href="/static/css/markdown.css" rel="stylesheet">
+    </head>
+    <style>
+    .colored {
+    color: rgb(40, 100, 255);
+    }
+    .separator {
+    margin: 0 4px;
+    }
+    </style>
+    <body>
+<div class="center">
+    <div class="post">
+        <div class="title" style="display: inline-grid;">Star64 - Installing Linux</div>
+        <a class="back" href="/blog/">back</a>
+        <div class="date">Jul 2, 2023</div>
+        <h2>Why?</h2>
+        <p>The <a class="colored" href="https://wiki.pine64.org/wiki/STAR64">Star64</a> sbc from <a class="colored" href="https://www.pine64.org">Pine64</a> is a sbc (single board computer) that is very interesting because it uses the RISC-V architecture. The RISC-V architecture is interesting because it is a free and open-source instruction set that offers numerous benefits such as flexibility and customization. I thought I would make a small guide for installing Linux on the Star64 board because it comes with no operating system installed, and I figured out it can be difficult to try installing it yourself as there are some documentation inconsistencies.</p>
+<h2>Installing Linux</h2>
+<p>If you are interested and want to try this yourself, you will need some accessories because the board is sold alone. (accessories can be found on the <a class="colored" href="https://pine64.com/product-category/star64-accessories/">Pine64 store</a> or somewhere else):
+<ul>
+    <li>microSD card</li>
+    <li>USB to TTL Serial Adapter for serial communication (USB to Transistor-Transistor Logic cable)</li>
+    <li>Power supply (12 volts 3 amp)</li>
+    <li>Another computer to flash the microSD and use for the serial console</li>
+</ul>
+  We are using a TTL cable because the Star64 has an HDMI port that is not activated by the firmware so you cannot use it as a console. The specific USB to TTL cable I am using can be found <a class="colored" href="https://www.adafruit.com/product/954">here</a> but you can choose whatever TTL cable you want. Once you have everything necessary, get an image for your microSD card (I used <a class="colored" href="https://github.com/Fishwaldo/meta-pine64">Fishwaldo's images</a> so your results may vary using other images). Next, flash the image onto the microSD with <a class="colored" href="https://etcher.balena.io/">Balena Etcher.</a> Insert the microSD into the slot on the other back side of the board. Now you are going to set the dip switches located near the 40-pin GPIO bus on the side of the board to this configuration:</p>
+<picture>
+  <source srcset="/static/images/SD_switch_map.jxl" type="image/jxl">
+  <source srcset="/static/images/SD_switch_map.webp" type="image/webp">
+  <img src="/static/images/SD_switch_map.png" alt="Fallback image">
+</picture>
+<h3>After that, you will need to plug in the USB to TTL cable.</h3> 
+<picture>
+  <source srcset="/static/images/pins.jxl" type="image/jxl">
+  <img src="/static/images/pins.jpg" alt="Fallback image">
+</picture>
+<div class="admonition danger"><p class="admonition-title">WARNING:</p> <b>Avoid the pins below pin 6; those are <u>5 volt</u> which is enough to mess up most cables. A very important thing to note is the schematics tell you to put TXD on pin 8 and RXD on pin 10 but <i>the schematics are wrong.</i></b>
+</div>
+Keeping that in mind, place <i>ground on pin 6, RXD on pin 8, and TXD on pin 10.</i> Connect the USB to TTL cable to a USB port on your computer. Open up the terminal and install tio or screen. After that, enter the following command: <code>tio -b 115200 /dev/ttyUSB0</code> or if your using screen enter this instead: <code>screen /dev/ttyUSB0 115200</code> If you're on a mac, tty path will be something more like <code>/dev/tty.usbserial-*</code> (* being the identifier of the USB to TTL cable). If you're unsure which path to use then run <code>ls -ltr /dev</code> and make sure it's showing up. Next, plug in the power supply to your board and wait, it might take a while. Linux will eventually start running. If you're using Fishwaldo's images, <a class="colored" href="https://github.com/Fishwaldo/meta-pine64">the logins and passwords are written in the README.</a> Now you can run commands and have some fun! Congratulations on installing Linux on your Star64 sbc!</p>
+<h2>Where to go from here?</h2>
+<p>The next step I took was setting up the wifi so I could install packages. You can easily connect your board to the internet in just a few steps: 
+<picture>  
+<source srcset="/static/images/activate.jxl" type="image/jxl">
+  <source srcset="/static/images/activate.webp" type="image/webp">
+  <img src="/static/images/activate.png" alt="Fallback image">
+</picture>
+<picture>
+  <source srcset="/static/images/wifi.jxl" type="image/jxl">
+  <source srcset="/static/images/wifi.webp" type="image/webp">
+  <img src="/static/images/wifi.png" alt="Fallback image">
+</picture>
+<picture>
+  <source srcset="/static/images/nm_config.jxl" type="image/jxl">
+  <source srcset="/static/images/nm_config.webp" type="image/webp">
+  <img src="/static/images/nm_config.png" alt="Fallback image">
+</picture>
+</p>
+Special thanks to the Star64 community. You can join the Star64 matrix <a class="colored" href="https://matrix.to/#/#star64:matrix.org">here</a>.
+Have fun experimenting, testing, and coding!
+</div>
+  <p>
+  <a href="https://elk.zone/disobey.net/@matteorosato">Mastodon</a>
+  <span class="separator">|</span>
+  <a href="https://matrix.to/#/@mrrcode:matrix.org">Matrix</a>
+</p>
+</div>
+</body>
+</html>

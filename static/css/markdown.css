@@ -60,6 +60,7 @@ code {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
+    font-family: "JetBrains Mono";
  }
  pre {
     display: block;
@@ -76,3 +77,28 @@ code {
     font-size: 14px;
     padding: 0;
  }
+/* 
+ kbd {
+  display: inline-block;
+  padding: 4px 8px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+*/
+
+kbd {
+  display: inline-block;
+  padding: 4px 8px;
+  font-family: "JetBrains Mono";
+  font-size: 14px;
+  background-color: #292929;
+  border: 1px solid #333;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: #f0f0f0;
+}
