@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="license" content="CC BY-SA 4.0">
 <title>
 Star64: Installing Linux
 </title>
@@ -12,6 +13,10 @@ Star64: Installing Linux
         <link href="/static/css/markdown.css" rel="stylesheet">
     </head>
     <style>
+    .image-caption {
+      font-style: italic;
+      font-size: 0.8em;
+    }
     .colored {
     color: rgb(40, 100, 255);
     }
@@ -36,11 +41,16 @@ Star64: Installing Linux
     <li>Another computer to flash the microSD and use for the serial console</li>
 </ul>
   The specific USB to TTL cable I am using can be found <a class="colored" href="https://www.adafruit.com/product/954">here.</a> Any TTL cable will work as long as it's 3.3 volts. Lots of USB to TTL cables are 3.3v so you might already have one. Once you have everything necessary, get an image for your microSD card (I used <a class="colored" href="https://github.com/Fishwaldo/meta-pine64">Fishwaldo's images</a> so your results may vary using other images). Next, flash the image onto the microSD with <a class="colored" href="https://etcher.balena.io/">Balena Etcher.</a> Insert the microSD into the slot on the other back side of the board. Now you are going to set the dip switches located near the 40-pin GPIO bus on the side of the board to this configuration:</p>
+<div class="image-container">
 <picture>
   <source srcset="/static/images/SD_switch_map.jxl" type="image/jxl">
   <source srcset="/static/images/SD_switch_map.webp" type="image/webp">
   <img src="/static/images/SD_switch_map.png" alt="Fallback image">
 </picture>
+<p class="image-caption">
+      This image is in the public domain.
+</p>
+</div>
 <h3>After that, you will need to plug in the USB to TTL cable.</h3> 
 <picture>
   <source srcset="/static/images/pins.jxl" type="image/jxl">
@@ -70,11 +80,18 @@ Keeping that in mind, place <i>ground on pin 6, RXD on pin 8, and TXD on pin 10.
 Special thanks to the Star64 community. You can join the Star64 matrix <a class="colored" href="https://matrix.to/#/#star64:matrix.org">here</a>.
 Have fun experimenting, testing, and coding!
 </div>
-  <p>
+<footer>
+<p>
+      All works on this webpage, except where otherwise noted, are licensed under the
+      <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> license.
+      The work(s) indicated as public domain are not subject to this license.
+</p>
+<p>
   <a href="https://elk.zone/disobey.net/@matteorosato">Mastodon</a>
   <span class="separator">|</span>
   <a href="https://matrix.to/#/@mrrcode:matrix.org">Matrix</a>
 </p>
+</footer>
 </div>
 </body>
 </html>
