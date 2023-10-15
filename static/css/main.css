@@ -98,3 +98,14 @@ img {
   color: #bb8483;
   background-color: #4c2a2a;
 }
+
+.image-caption {
+  font-style: italic;
+  font-size: 0.8em;
+}
+.colored {
+  color: rgb(40, 100, 255);
+}
+.separator {
+  margin: 0 4px;
+}

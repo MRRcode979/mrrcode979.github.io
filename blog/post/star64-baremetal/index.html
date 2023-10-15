@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+        <title>Star64 baremetal ASM</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="license" content="CC BY-SA 4.0">
+        <link href="/static/favicon.webp" rel="icon">
+        <link href="/static/css/reset.css" rel="stylesheet">
+        <link href="/static/css/main.css" rel="stylesheet">
+        <link href="/static/css/markdown.css" rel="stylesheet">
+</head>
+<body><h2 id="quick-notice">Quick Notice</h2>
+<p>Before we start, I&#39;d like to just say this is not intended to be a tutorial but rather my experience with writing RISC-V assembly on the Star64. If you&#39;d like to you could try to follow and do it yourself. Now, with all of that aside here is what I tried.</p>
+<h3 id="figuring-out-the-uart">Figuring out the UART</h3>
+<p>I decided to start with a Hello World program but first I installed the riscv-gnu-toolchain from the github repo <a href="https://github.com/riscv-collab/riscv-gnu-toolchain">here</a> and installed the 64 bit version. After that was done, I was finally ready to start writing the assembly program. There was one problem though, I couldn&#39;t find much information about the UART by looking at the JH7110 data sheet but luckily I checked out some stuff on the rvspace forum in specific, <a href="https://forum.rvspace.org/t/adventure-in-text-on-the-uart/887">this post</a>. Somebody had been trying to do some bare metal programming on the VF2 that involved the UART and they had discovered that the UART on the JH7110 is a <a href="https://media.digikey.com/pdf/Data%20Sheets/Texas%20Instruments%20PDFs/PC16550D.pdf">PC16550D</a> so now I was able to know what registers to use for my assembly program. After that, I just went straight to the <a href="https://doc-en.rvspace.org/JH7110/PDF/JH7110_Datasheet.pdf">JH7110 datasheet</a> and found my UART base address. </p>
+<h3 id="writing-the-bare-metal-assembly">Writing the bare metal Assembly</h3>
+<p>After all of that, the final Assembly program I came up with is this: </p>
+<pre><code><span class="hljs-meta">.section</span> <span class="hljs-meta">.data</span>
+<span class="hljs-symbol">
+hello:</span>
+<span class="hljs-meta">.asciz</span> <span class="hljs-string">"Hello, World!\n"</span>  <span class="hljs-comment"># Null-terminated string with newline character</span>
+
+<span class="hljs-meta">.equ</span> UART_BASE, <span class="hljs-number">0x10000000</span>
+
+<span class="hljs-meta">.section</span> <span class="hljs-meta">.text</span>
+.globl _start
+<span class="hljs-symbol">
+_start:</span>
+    <span class="hljs-comment"># Set up UART</span>
+    la <span class="hljs-built_in">t0</span>, UART_BASE         <span class="hljs-comment"># Load address of UART base into t0</span>
+
+    <span class="hljs-comment"># Send "Hello, World!" message</span>
+    la <span class="hljs-built_in">t1</span>, hello             <span class="hljs-comment"># Load address of the hello string into t1</span>
+    <span class="hljs-keyword">jal </span><span class="hljs-built_in">ra</span>, print_loop     <span class="hljs-comment"># Jump and link to print_loop subroutine</span>
+<span class="hljs-symbol">
+end_loop:</span>
+    <span class="hljs-keyword">j </span>end_loop               <span class="hljs-comment"># Infinite loop to prevent the program from terminating`</span>
+<span class="hljs-symbol">
+print_loop:</span>
+    <span class="hljs-keyword">lb </span><span class="hljs-built_in">a0</span>, <span class="hljs-number">0</span>(<span class="hljs-built_in">t1</span>)             <span class="hljs-comment"># Load the next character from the string into a0</span>
+    <span class="hljs-keyword">beqz </span><span class="hljs-built_in">a0</span>, print_done      <span class="hljs-comment"># Check if we've reached the end of the string (null terminator)</span>
+    <span class="hljs-keyword">addi </span><span class="hljs-built_in">t1</span>, <span class="hljs-built_in">t1</span>, <span class="hljs-number">1</span>           <span class="hljs-comment"># Move to the next character in the string</span>
+
+    <span class="hljs-comment"># Otherwise, send the character to the UART</span>
+    <span class="hljs-keyword">sb </span><span class="hljs-built_in">a0</span>, <span class="hljs-number">0</span>(<span class="hljs-built_in">t0</span>)             <span class="hljs-comment"># Store the character to the UART's Transmit Holding Register</span>
+
+    <span class="hljs-keyword">j </span>print_loop             <span class="hljs-comment"># Repeat for the next character in the string</span>
+<span class="hljs-symbol">
+print_done:</span>
+    ret
+</code></pre><p>After that I wrote the linker file: </p>
+<pre><code><span class="hljs-symbol">ENTRY</span>(_start)   <span class="hljs-comment">/* Entry point of the program */</span>
+
+<span class="hljs-symbol">MEMORY</span>
+{
+    ram (rwx) : ORIGIN = <span class="hljs-number">0x80000000</span>, LENGTH = <span class="hljs-number">64</span>K  <span class="hljs-comment">/* Define a 64KB region starting at 0x80000000 for RAM */</span>
+}
+
+<span class="hljs-symbol">SECTIONS</span>
+{
+    <span class="hljs-meta">.text</span> :
+    {
+        _start = .<span class="hljs-comment">;     /* Set the symbol _start to the current address */</span>
+        *(<span class="hljs-meta">.text</span>)        <span class="hljs-comment">/* .text section (code) */</span>
+    } &gt; ram
+
+    <span class="hljs-meta">.data</span> :
+    {
+        *(<span class="hljs-meta">.data</span>)        <span class="hljs-comment">/* .data section (initialized data) */</span>
+    } &gt; ram
+
+    .<span class="hljs-keyword">bss </span>:
+    {
+        *(.<span class="hljs-keyword">bss) </span>        <span class="hljs-comment">/* .bss section (uninitialized data) */</span>
+    } &gt; ram
+
+
+    /DISCARD/ :
+    {
+        *(*)            <span class="hljs-comment">/* Discard all other sections */</span>
+    }
+}
+</code></pre><p>It&#39;s important that the origin is set to something that&#39;s not already occupied in memory. When I was done writing that I compiled it. I used the gnu riscv64 bit toolchain as mentioned earlier. <code>riscv64-unknown-elf-as -o hello.o main.s</code> I linked it with <code>riscv64-unknown-elf-ld -T linker.ld -o hello.elf hello.o</code> This is all great, but the one thing is for bare metal it needs to be  a .bin file so I used objcopy <code>riscv64-unknown-elf-objcopy -O binary hello.elf hello.bin</code> </p>
+<h3 id="running-it-with-u-boot">Running it with U-boot</h3>
+<p>Now I could finally run it so I copied the binary onto a microSD set the dip switches to 0 (Flash SPI) so I could run my binary with U-boot commands. My microSD is using <strong>FAT</strong> as the filesystem. I turned the board on and used tio with baud rate set to 115200 bps, then ran these U-boot commands <em>in order:</em></p>
+<ol>
+<li><code>fatload mmc 1 hello.bin 0x80000000</code></li>
+<li><code>go 0x80000000</code></li>
+</ol>
+<p>It&#39;s important to put these commands in order, because <code>fatload</code> loads hello.bin at 0x80000000 and then the <code>go</code> command executes hello.bin (which is at 0x80000000)</p>
+<h3 id="hello-world-">Hello, World!</h3>
+<p>After all of that work, I&#39;ve finally got the output of <code>Hello, World!</code> on bare metal with no errors!</p>
+<h3 id="bare-metal-risc-v-with-rust">Bare metal RISC-V with Rust</h3>
+<p>After I ran some assembly programs and got C programs to work with bare-metal RISC-V on the Star64, I started experimenting with using the Rust programming language for bare metal RISC-V. So far, I&#39;ve ran an infinite loop but have had no luck with getting a Hello World program to run with the riscv64gc-unknown-none-elf target. I&#39;ve been using objcopy to turn it into a .bin but when I try to run it on the Star64 I get unknown instruction errors. I&#39;m still experimenting so I&#39;ll make a new blog post if I figure it out, or if any progress is made.</p>
+<h3 id="contact">Contact</h3>
+<p>If anyone has gotten bare metal Rust on RISC-V to work with the Star64 or VF2 then please contact me and let me know how you did it or any possibility&#39;s for what I&#39;m doing wrong. Also, if you notice anything wrong please contact me about the issue with my blog. If you're interested in messing with the Star64 I highly recommend checking out the <a href="https://matrix.to/#/#star64:matrix.org">Star64 matrix</a>.</p>
+<p>Thank you for reading!</p>
+<footer>
+<p>
+  <a href="https://elk.zone/disobey.net/@matteorosato">Mastodon</a>
+  <span class="separator">|</span>
+  <a href="https://matrix.to/#/@mrrcode:matrix.org">Matrix</a>
+</p>
+</footer>
+</body></html>
