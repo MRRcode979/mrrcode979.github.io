@@ -85,7 +85,7 @@ print_done:</span>
 <h3 id="running-it-with-u-boot">Running it with U-boot</h3>
 <p>Now I could finally run it so I copied the binary onto a microSD set the dip switches to 0 (Flash SPI) so I could run my binary with U-boot commands. My microSD is using <strong>FAT</strong> as the filesystem. I turned the board on and used tio with baud rate set to 115200 bps, then ran these U-boot commands <em>in order:</em></p>
 <ol>
-<li><code>fatload mmc 1 hello.bin 0x80000000</code></li>
+<li><code>fatload mmc 1 0x80000000 hello.bin</code></li>
 <li><code>go 0x80000000</code></li>
 </ol>
 <p>It&#39;s important to put these commands in order, because <code>fatload</code> loads hello.bin at 0x80000000 and then the <code>go</code> command executes hello.bin (which is at 0x80000000)</p>
