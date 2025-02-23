@@ -40,9 +40,26 @@ body {
     display: inline-grid;
     font-size: 11px;
     padding: 1px 3px 1px 3px;
-    border: 2px solid #242424;
-    border-radius: 4px;
     margin-top: 2px;
+}
+
+.card {
+  background-color: oklch(30% 0 280);
+  box-shadow: 0 0 24px oklch(17.8% 0 0);
+  border-radius: 10px;
+  cursor: pointer;
+  max-width: 768px;
+  padding: 24px;
+  margin: 25px;
+  text-decoration: none;
+}
+
+.card { transition: transform 0.3s cubic-bezier(0.42, 0, 0.58, 1), box-shadow 0.3s ease-in-out; }
+
+.card:hover { transform: scaleY(1.05) scaleX(1.05); box-shadow: 0 0 40px oklch(75.73% 0.1263 254.78); }
+
+.card * {
+    color: #FFFFFF;
 }
 
 .post {
