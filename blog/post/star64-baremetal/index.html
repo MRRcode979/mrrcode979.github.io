@@ -91,10 +91,7 @@ print_done:</span>
 <p>It&#39;s important to put these commands in order, because <code>fatload</code> loads hello.bin at 0x80000000 and then the <code>go</code> command executes hello.bin (which is at 0x80000000)</p>
 <h3 id="hello-world-">Hello, World!</h3>
 <p>After all of that work, I&#39;ve finally got the output of <code>Hello, World!</code> on bare metal with no errors!</p>
-<h3 id="bare-metal-risc-v-with-rust">Bare metal RISC-V with Rust</h3>
-<p>After I ran some assembly programs and got C programs to work with bare-metal RISC-V on the Star64, I started experimenting with using the Rust programming language for bare metal RISC-V. So far, I&#39;ve ran an infinite loop but have had no luck with getting a Hello World program to run with the riscv64gc-unknown-none-elf target. I&#39;ve been using objcopy to turn it into a .bin but when I try to run it on the Star64 I get unknown instruction errors. I&#39;m still experimenting so I&#39;ll make a new blog post if I figure it out, or if any progress is made.</p>
 <h3 id="contact">Contact</h3>
-<p>If anyone has gotten bare metal Rust on RISC-V to work with the Star64 or VF2 then please contact me and let me know how you did it or any possibility&#39;s for what I&#39;m doing wrong. Also, if you notice anything wrong please contact me about the issue with my blog. If you're interested in messing with the Star64 I highly recommend checking out the <a href="https://matrix.to/#/#star64:matrix.org">Star64 matrix</a>.</p>
 <p>Thank you for reading!</p>
 <footer>
 <p>
